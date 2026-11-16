@@ -56,11 +56,17 @@ first version by hand.
 ## One-time repository setup
 
 - **Visibility**: public. npm makes provenance only for public repositories.
-- **Secret** `RELEASE_GITHUB_TOKEN` in the `release` environment: a fine-grained token, or a
-  GitHub App token, for this repository only, with **Contents: read and write**. craft pushes the
-  release branch with it. A push with `GITHUB_TOKEN` does not start CI, and craft waits for CI.
-- **Environment** `release`: required reviewers, and deployment only from `main`.
-- **Ruleset** for `main`: require a pull request and the `ci` status check, block force pushes and
-  deletion. Add the token owner (or the GitHub App) to the bypass list, because craft pushes the
-  merge of the release branch to `main`.
-- **Tag ruleset** for `*@*`: block deletion and updates. Allow the token owner to create tags.
+- **GitHub App** owned by the `formsort` organization, installed only on this repository. It
+  keeps working when people leave. Repository permissions: Contents read and write, Actions read,
+  Checks read, Commit statuses read. The Release workflow makes a one-hour token from it. craft
+  pushes the release branch with that token. A push with `GITHUB_TOKEN` does not start CI, and
+  craft waits for CI.
+- **Environment** `release`: required reviewers, deployment only from protected branches,
+  variable `RELEASE_APP_CLIENT_ID` (the app's Client ID) and secret `RELEASE_APP_PRIVATE_KEY`
+  (a private key of the app).
+- **Branch protection** for `main`: require a pull request with one approval and Code Owner
+  review, and the `ci` status check. Block force pushes and deletion. Let the app bypass the pull
+  request requirement, because craft pushes the merge of the release branch to `main`.
+- **Teams**: `engineering` Maintain and `security-guild` Admin. CODEOWNERS needs teams with write
+  access.
+- **Tag ruleset** for `*@*`: block deletion and updates. Allow the app to create tags.
