@@ -58,15 +58,21 @@ first version by hand.
 - **Visibility**: public. npm makes provenance only for public repositories.
 - **GitHub App** owned by the `formsort` organization, installed only on this repository. It
   keeps working when people leave. Repository permissions: Contents read and write, Actions read,
-  Checks read, Commit statuses read, Pull requests read. The Release workflow makes a one-hour token from it. craft
-  pushes the release branch with that token. A push with `GITHUB_TOKEN` does not start CI, and
-  craft waits for CI.
-- **Environment** `release`: required reviewers, deployment only from protected branches,
-  variable `RELEASE_APP_CLIENT_ID` (the app's Client ID) and secret `RELEASE_APP_PRIVATE_KEY`
-  (a private key of the app).
+  Checks read, Commit statuses read, Pull requests read. The Release workflow makes a one-hour
+  token from it. craft pushes the release branch with that token. A push with `GITHUB_TOKEN` does
+  not start CI, and craft waits for CI.
+- **Environment** `release`: `security-guild` as required reviewers, with self-review prevented
+  and no admin bypass. Thus, a second person approves each publish. Deployment only from protected
+  branches. Variable `RELEASE_APP_CLIENT_ID` (the app's Client ID) and secret
+  `RELEASE_APP_PRIVATE_KEY` (a private key of the app).
 - **Branch protection** for `main`: require a pull request with one approval and Code Owner
-  review, and the `ci` status check. Block force pushes and deletion. Let the app bypass the pull
-  request requirement, because craft pushes the merge of the release branch to `main`.
+  review, and the `ci` status check. Include administrators. Block force pushes and deletion. Let
+  the app bypass the pull request requirement, because craft pushes the merge of the release
+  branch to `main`.
 - **Teams**: `engineering` Maintain and `security-guild` Admin. CODEOWNERS needs teams with write
-  access.
-- **Tag ruleset** for `*@*`: block deletion and updates. Allow the app to create tags.
+  access. `security-guild` owns CI, the release config and the files that the release job
+  installs and runs.
+- **Tag ruleset** `Release tags` for `refs/tags/*@*`: block creation, updates and deletion. Only
+  the app bypasses it.
+- **Immutable releases**: on. craft uploads the assets to a draft release, then publishes it.
+- **Actions**: fork pull requests from all outside collaborators need approval before they run.
