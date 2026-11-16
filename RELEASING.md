@@ -47,10 +47,18 @@ first version by hand.
 5. In **Settings → Publishing access**, select **Require two-factor authentication and disallow
    tokens**. Trusted publishing continues to work.
 6. Release the first real version with the Release workflow.
-7. Deprecate the placeholder:
+7. If the first release is a prerelease, it gets the `next` tag. Move `latest` to it, or the npm
+   page shows the placeholder:
+
+   ```sh
+   npm dist-tag add <package>@<version> latest
+   ```
+
+8. Deprecate the placeholders. npm can also add `0.0.0-stage` when you set up the package:
 
    ```sh
    npm deprecate <package>@0.0.0 "Placeholder. Use a later version."
+   npm deprecate <package>@0.0.0-stage "Placeholder. Use a later version."
    ```
 
 ## One-time repository setup
