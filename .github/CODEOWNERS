@@ -1,0 +1,6 @@
+# The last matching pattern wins.
+* @formsort/engineering
+
+# These control what npm publishes.
+/.github/ @formsort/security-guild
+/.craft.yml @formsort/security-guild
