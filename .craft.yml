@@ -4,6 +4,12 @@ github:
   repo: rooks-oss
 changelog:
   policy: auto
+# Read tarballs only from CI runs on the release commit, not from any run in the repo.
+artifactProvider:
+  name: github
+  config:
+    artifacts:
+      CI: tarballs
 workspaces:
   # Each package releases on its own: release/<dir>/<version> branch, <dir>@<version> tag.
   packages/*:

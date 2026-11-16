@@ -31,10 +31,11 @@ jobs:
       - run: pnpm test
       - run: pnpm check:package
       - run: pnpm pack:packages
-      # craft publish downloads the artifact named after the commit SHA.
-      # Each package's craft targets pick only its own tarball.
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      # craft publishes this artifact; pull request runs (forks too) never upload it.
+      - if: github.event_name == 'push'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: ${{ github.sha }}
+          name: tarballs
           path: packs/*.tgz
           if-no-files-found: error
+          overwrite: true
