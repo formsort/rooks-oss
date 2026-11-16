@@ -58,7 +58,7 @@ first version by hand.
 - **Visibility**: public. npm makes provenance only for public repositories.
 - **GitHub App** owned by the `formsort` organization, installed only on this repository. It
   keeps working when people leave. Repository permissions: Contents read and write, Actions read,
-  Checks read, Commit statuses read. The Release workflow makes a one-hour token from it. craft
+  Checks read, Commit statuses read, Pull requests read. The Release workflow makes a one-hour token from it. craft
   pushes the release branch with that token. A push with `GITHUB_TOKEN` does not start CI, and
   craft waits for CI.
 - **Environment** `release`: required reviewers, deployment only from protected branches,
