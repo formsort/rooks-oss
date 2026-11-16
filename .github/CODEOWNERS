@@ -9,3 +9,5 @@
 /pnpm-workspace.yaml @formsort/security-guild
 /pnpm-lock.yaml @formsort/security-guild
 /packages/*/package.json @formsort/security-guild
+/.npmrc @formsort/security-guild
+/.pnpmfile.* @formsort/security-guild

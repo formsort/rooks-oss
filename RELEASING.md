@@ -74,7 +74,8 @@ first version by hand.
   branches. Variable `RELEASE_APP_CLIENT_ID` (the app's Client ID) and secret
   `RELEASE_APP_PRIVATE_KEY` (a private key of the app).
 - **Branch protection** for `main`: require a pull request with one approval and Code Owner
-  review, and the `ci` status check. Include administrators. Block force pushes and deletion. Let
+  review, and the `ci` status check. Dismiss stale approvals, and require approval of the most
+  recent push by another person. Include administrators. Block force pushes and deletion. Let
   the app bypass the pull request requirement, because craft pushes the merge of the release
   branch to `main`.
 - **Teams**: `engineering` Maintain and `security-guild` Admin. CODEOWNERS needs teams with write
@@ -84,3 +85,4 @@ first version by hand.
   the app bypasses it.
 - **Immutable releases**: on. craft uploads the assets to a draft release, then publishes it.
 - **Actions**: fork pull requests from all outside collaborators need approval before they run.
+  The default workflow token is read-only. Actions must be pinned to a full commit SHA.

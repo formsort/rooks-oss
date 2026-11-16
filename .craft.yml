@@ -4,6 +4,8 @@ github:
   repo: rooks-oss
 changelog:
   policy: auto
+# Never run scripts/post-release.sh: it would get the app token.
+postReleaseCommand: ''
 # Read tarballs only from CI runs on the release commit, not from any run in the repo.
 artifactProvider:
   name: github
