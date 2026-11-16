@@ -3,3 +3,8 @@ packages:
 
 # Wait a week before installing a new release of any dependency.
 minimumReleaseAge: 10080
+
+# Patched versions of dev-only dependencies that @sentry/craft pins through @vercel/client.
+overrides:
+  '@vercel/client>tar-fs': ^1.16.6
+  '@vercel/client>minimatch': ^5.1.8
