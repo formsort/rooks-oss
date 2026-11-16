@@ -1,0 +1,23 @@
+{
+  "name": "rooks-oss",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "check:package": "pnpm -r check:package",
+    "pack:packages": "pnpm --filter \"./packages/*\" exec pnpm pack --pack-destination ../../packs",
+    "lint": "oxlint --deny-warnings",
+    "format": "oxfmt && oxlint --fix",
+    "format:check": "oxfmt --check"
+  },
+  "devDependencies": {
+    "@sentry/craft": "^3.11.2",
+    "oxfmt": "^0.77.0",
+    "oxlint": "^1.92.0"
+  },
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "packageManager": "pnpm@12.16.1"
+}

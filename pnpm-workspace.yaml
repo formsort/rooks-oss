@@ -1,0 +1,5 @@
+packages:
+  - packages/*
+
+# Wait a week before installing a new release of any dependency.
+minimumReleaseAge: 10080

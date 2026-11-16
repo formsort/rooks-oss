@@ -1,0 +1,21 @@
+minVersion: '3.11.0'
+github:
+  owner: formsort
+  repo: rooks-oss
+changelog:
+  policy: auto
+workspaces:
+  # Each package releases on its own: release/<dir>/<version> branch, <dir>@<version> tag.
+  packages/*:
+    releaseBranchPrefix: 'release/{{workspaceName}}'
+    requireNames:
+      - '/^{{packageSimpleName}}-\d.*\.tgz$/'
+    targets:
+      - name: npm
+        access: public
+        # Fail instead of falling back to a token.
+        oidc: true
+        includeNames: '/^{{packageSimpleName}}-\d.*\.tgz$/'
+      - name: github
+        tagPrefix: '{{workspaceName}}@'
+        includeNames: '/^{{packageSimpleName}}-\d.*\.tgz$/'

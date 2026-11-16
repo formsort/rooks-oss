@@ -1,0 +1,53 @@
+# npm trusted publishing trusts this file name and the `release` environment.
+# Rename either one only together with the npm package settings.
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Directory name under packages/
+        required: true
+        type: choice
+        options:
+          - web-embed
+      version:
+        description: Version to release, for example 0.1.0
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing (OIDC)
+    env:
+      GIT_COMMITTER_NAME: Rooks Release Bot
+      GIT_AUTHOR_NAME: Rooks Release Bot
+      EMAIL: releases+github@formsort.com
+    steps:
+      # The release branch push must start CI, which GITHUB_TOKEN pushes do not.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      # No dependency cache in the release job, to prevent cache poisoning.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - name: Prepare and publish with craft
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+        run: pnpm exec craft prepare --publish "$VERSION" --workspace "packages/$PACKAGE"
