@@ -1,6 +1,13 @@
 # The last matching pattern wins.
 * @formsort/engineering
 
-# These control what npm publishes.
+# These control what npm publishes: CI, release config, and what the release job installs and runs.
 /.github/ @formsort/security-guild
 /.craft.yml @formsort/security-guild
+/.nvmrc @formsort/security-guild
+/package.json @formsort/security-guild
+/pnpm-workspace.yaml @formsort/security-guild
+/pnpm-lock.yaml @formsort/security-guild
+/packages/*/package.json @formsort/security-guild
+/.npmrc @formsort/security-guild
+/.pnpmfile.* @formsort/security-guild
