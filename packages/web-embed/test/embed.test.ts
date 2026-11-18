@@ -28,15 +28,18 @@ afterEach(() => {
 });
 
 test('cross-origin forms get their own ports, including after a reload', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
   const first = mount();
   first.id = 'intake';
   const second = mount();
   const onRedirect = vi.fn<(url: string) => boolean>(() => false);
+  const onError = vi.fn<(error: Error) => void>();
   const intake = embed('#intake', `${formUrl}?height=420`, {
     answers: { count: 3, enabled: true, choices: ['test'] },
     onRedirect,
+    onError,
   });
-  const other = embed(second, `${formUrl}?height=700`);
+  const other = embed(second, `${formUrl}?height=700`, { onError });
 
   try {
     const intakeFrame = first.querySelector('iframe')!;
@@ -44,8 +47,10 @@ test('cross-origin forms get their own ports, including after a reload', async (
     expect(formUrl.origin).not.toBe(location.origin);
     expect(new URL(intakeFrame.src).search).toBe('?height=420&embed=answers');
     await expect.poll(() => intakeFrame.style.height).toBe('420px');
-    await expect.poll(() => onRedirect).toHaveBeenCalledWith(`${formUrl}#complete`);
+    await expect.poll(() => onRedirect).toHaveBeenCalledExactlyOnceWith(`${formUrl}#complete`);
     await expect.poll(() => otherFrame.style.height).toBe('700px');
+    await vi.runAllTimersAsync();
+    expect(onError).not.toHaveBeenCalled();
 
     intakeFrame.src = `${formUrl}?height=480&embed=answers`;
     await expect.poll(() => intakeFrame.style.height).toBe('480px');
@@ -78,10 +83,22 @@ test('ready from a different window or origin cannot prevent the timeout', async
     await vi.runAllTimersAsync();
     expect(onError).toHaveBeenCalledExactlyOnceWith(
       new Error(
-        `Rooks form did not respond. Add ${location.origin} to the form’s allowed domains.`,
+        `Rooks form did not respond. Check the published form URL and make sure ${location.origin} is in the form’s allowed domains.`,
       ),
     );
+
+    const frame = target.querySelector('iframe')!;
+    frame.src = `${formUrl}?height=420&embed=1`;
+    await expect.poll(() => frame.style.height).toBe('420px');
   } finally {
     handle.destroy();
   }
+});
+
+test('rejects a non-HTTP(S) form URL before mounting an iframe', () => {
+  const target = mount();
+  expect(() => embed(target, 'javascript:void(0)')).toThrow(
+    'Rooks form URL must use HTTP or HTTPS.',
+  );
+  expect(target.querySelector('iframe')).toBeNull();
 });

@@ -32,12 +32,7 @@ const READY_TIMEOUT_MS = 10_000;
 export function embed(
   target: string | Element,
   formUrl: string,
-  {
-    answers,
-    height = 'auto',
-    onRedirect,
-    onError = window.reportError.bind(window),
-  }: EmbedOptions = {},
+  { answers, height = 'auto', onRedirect, onError }: EmbedOptions = {},
 ): EmbedHandle {
   const container = typeof target === 'string' ? document.querySelector(target) : target;
   if (!container) {
@@ -54,9 +49,7 @@ export function embed(
   function onFormMessage(event: MessageEvent<FormMessage>) {
     const message = event.data;
     if (message?.type === 'height' && height === 'auto') {
-      if (Number.isFinite(message.height) && message.height >= 0) {
-        iframe.style.height = `${message.height}px`;
-      }
+      iframe.style.height = `${message.height}px`;
     } else if (message?.type === 'redirect' && typeof message.url === 'string') {
       let destination: URL;
       try {
@@ -101,11 +94,14 @@ export function embed(
   iframe.style.cssText = `display: block; width: 100%; border: 0; height: ${height === 'auto' ? 150 : height}px`;
   iframe.src = url.href;
   const timeout = window.setTimeout(() => {
-    onError(
-      new Error(
-        `Rooks form did not respond. Add ${window.location.origin} to the form’s allowed domains.`,
-      ),
+    const error = new Error(
+      `Rooks form did not respond. Check the published form URL and make sure ${window.location.origin} is in the form’s allowed domains.`,
     );
+    if (onError) {
+      onError(error);
+    } else {
+      throw error;
+    }
   }, READY_TIMEOUT_MS);
   container.append(iframe);
 
