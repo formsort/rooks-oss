@@ -25,6 +25,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
       - run: pnpm lint
+      - name: Check the web embed README release lines
+        run: node .github/scripts/web-embed-release.mjs check-template
       - run: pnpm typecheck
       - run: pnpm build
       - name: Verify web embed release README integrity

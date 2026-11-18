@@ -14,7 +14,9 @@ a publish only from `.github/workflows/release.yml` in the `release` environment
    - It creates the branch `release/<package>/<version>`, bumps `package.json` and updates
      `CHANGELOG.md`.
    - The web embed prepare hook pins the version and bundle hash in the package README and updates
-     the npm link in the repository README. Craft commits these edits on the release branch.
+     the npm link in the repository README. Craft commits these edits on the release branch. A
+     prerelease does not replace a stable version in the READMEs, so they keep recommending the
+     stable version.
    - CI rebuilds on that branch, verifies the web embed README against the bundle it will pack, and
      uploads the tarballs.
    - It publishes the package's tarball to npm with provenance.
