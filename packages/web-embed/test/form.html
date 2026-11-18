@@ -1,0 +1,32 @@
+<!doctype html>
+<script type="module">
+  const hostOrigin = new URL(document.referrer).origin;
+  const query = new URLSearchParams(location.search);
+
+  window.addEventListener('message', ({ source, origin, data, ports }) => {
+    if (source !== parent || origin !== hostOrigin || data.type !== 'init') {
+      return;
+    }
+
+    const { answers } = data;
+    const hasAnswers = query.get('embed') === 'answers';
+    if (
+      hasAnswers
+        ? answers?.count !== 3 || answers?.enabled !== true || answers?.choices?.[0] !== 'test'
+        : query.get('embed') !== '1' || answers !== undefined
+    ) {
+      return;
+    }
+
+    const [port] = ports;
+    port.postMessage({ type: 'height', height: Number(query.get('height')) });
+    if (hasAnswers) {
+      port.postMessage({ type: 'redirect', url: '/test/form.html#complete' });
+    }
+  });
+
+  if (!query.has('silent')) {
+    parent.postMessage({ type: 'ready' }, '*');
+  }
+  parent.postMessage({ type: 'fixture-loaded' }, hostOrigin);
+</script>
