@@ -10,7 +10,7 @@ form's allowed domains. Use the final published form URL, including its custom d
 ### With a package manager
 
 ```sh
-pnpm add @rooks-ai/web-embed
+pnpm add @rooks-ai/web-embed@VERSION
 ```
 
 Add a container where the form should appear.
@@ -33,11 +33,15 @@ const form = embed('#intake', 'https://acme.rooks.app/form/intake', {
 
 ### With a script tag
 
-Replace `VERSION` with a published version of `@rooks-ai/web-embed` that includes `embed()`.
+The script tag pins the package version and uses subresource integrity to verify the bundle.
 
 ```html
 <div id="intake"></div>
-<script src="https://cdn.jsdelivr.net/npm/@rooks-ai/web-embed@VERSION/dist/index.umd.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@rooks-ai/web-embed@VERSION/dist/index.umd.js"
+  integrity="sha384-INTEGRITY"
+  crossorigin="anonymous"
+></script>
 <script>
   const form = RooksWebEmbed.embed('#intake', 'https://acme.rooks.app/form/intake');
 </script>

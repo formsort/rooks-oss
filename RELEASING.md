@@ -6,12 +6,17 @@ a publish only from `.github/workflows/release.yml` in the `release` environment
 
 ## Release a package
 
-1. Run the **Release** workflow from `main`. Select the package and type the version.
+1. Run the **Release** workflow from `main`. Select the package and enter the exact version, such as
+   `0.1.0` or `0.1.0-alpha.1`. For web embed, the workflow builds that version in a read-only job
+   and saves the UMD bundle's SHA-384 integrity hash.
 2. A person in the `release` environment approves the run.
 3. craft does these steps:
    - It creates the branch `release/<package>/<version>`, bumps `package.json` and updates
      `CHANGELOG.md`.
-   - CI runs on that branch and uploads the tarballs.
+   - The web embed prepare hook pins the version and bundle hash in the package README and updates
+     the npm link in the repository README. Craft commits these edits on the release branch.
+   - CI rebuilds on that branch, verifies the web embed README against the bundle it will pack, and
+     uploads the tarballs.
    - It publishes the package's tarball to npm with provenance.
    - It creates the tag and GitHub release `<package>@<version>`.
    - It merges the release branch into `main`.
@@ -26,7 +31,8 @@ first version by hand.
 
 1. Create `packages/<name>` with `name`, `version`, `repository.url` and `repository.directory`
    like `packages/web-embed/package.json`.
-2. Add `<name>` to the `package` options in `.github/workflows/release.yml`.
+2. Add `packages/<name>: {}` under `workspaces` in `.craft.yml` and add `<name>` to the `package`
+   options in `.github/workflows/release.yml`.
 3. Publish a placeholder from a separate empty directory. Use your own npm account with 2FA:
 
    ```sh

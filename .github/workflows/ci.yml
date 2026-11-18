@@ -27,6 +27,9 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm build
+      - name: Verify web embed release README integrity
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/web-embed/')
+        run: node .github/scripts/web-embed-release.mjs check
       - run: pnpm --filter @rooks-ai/web-embed exec playwright install --with-deps --only-shell chromium
       - run: pnpm test
       - run: pnpm check:package
