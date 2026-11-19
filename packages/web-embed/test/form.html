@@ -8,21 +8,21 @@
       return;
     }
 
-    const { answers } = data;
+    const answers = data.payload?.answers;
     const hasAnswers = query.get('embed') === 'answers';
     if (
       hasAnswers
         ? answers?.count !== 3 || answers?.enabled !== true || answers?.choices?.[0] !== 'test'
-        : query.get('embed') !== '1' || answers !== undefined
+        : query.get('embed') !== '1' || 'payload' in data
     ) {
       return;
     }
 
     const [port] = ports;
-    port.postMessage({ type: 'height', height: Number(query.get('height')) });
+    port.postMessage({ type: 'height', payload: { height: Number(query.get('height')) } });
     if (hasAnswers) {
-      port.postMessage({ type: 'redirect', url: 'javascript:void(0)' });
-      port.postMessage({ type: 'redirect', url: '/test/form.html#complete' });
+      port.postMessage({ type: 'redirect', payload: { url: 'javascript:void(0)' } });
+      port.postMessage({ type: 'redirect', payload: { url: '/test/form.html#complete' } });
     }
   });
 
