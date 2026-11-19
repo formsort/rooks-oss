@@ -12,7 +12,7 @@ on:
         options:
           - web-embed
       version:
-        description: Version to release, for example 0.1.0
+        description: Exact version to release, for example 0.1.0
         required: true
 
 permissions:
@@ -22,7 +22,30 @@ concurrency:
   group: release
 
 jobs:
+  build-integrity:
+    if: inputs.package == 'web-embed'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      integrity: ${{ steps.bundle.outputs.integrity }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - run: pnpm install --frozen-lockfile
+      - id: bundle
+        env:
+          VERSION: ${{ inputs.version }}
+        run: node .github/scripts/web-embed-release.mjs build "$VERSION"
+
   release:
+    needs: build-integrity
+    if: ${{ !cancelled() && (inputs.package != 'web-embed' || needs.build-integrity.result == 'success') }}
     runs-on: ubuntu-latest
     environment: release
     permissions:
@@ -60,4 +83,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           PACKAGE: ${{ inputs.package }}
           VERSION: ${{ inputs.version }}
-        run: pnpm exec craft prepare --publish "$VERSION" --workspace "packages/$PACKAGE"
+          BUNDLE_INTEGRITY: ${{ needs.build-integrity.outputs.integrity }}
+        run: |
+          printf '%s\n' "$BUNDLE_INTEGRITY" > "$RUNNER_TEMP/web-embed-integrity"
+          pnpm exec craft prepare --publish "$VERSION" --workspace "packages/$PACKAGE"

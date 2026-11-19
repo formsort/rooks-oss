@@ -6,6 +6,8 @@ Public packages for [Rooks](https://rooks.ai) forms.
 | ------------------------------------------- | ------------------------------ |
 | [`@rooks-ai/web-embed`](packages/web-embed) | Embed Rooks forms in web pages |
 
+[Web embed on npm](https://www.npmjs.com/package/@rooks-ai/web-embed) <!-- web-embed-version -->
+
 ## Development
 
 Use Node 24 (see `.nvmrc`) and the pnpm version in `package.json` (`corepack enable pnpm`).
