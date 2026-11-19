@@ -11,10 +11,12 @@ export interface ReadyMessage {
 
 export interface InitMessage {
   type: 'init';
-  answers?: Answers;
+  payload?: { answers: Answers };
 }
 
-export type FormMessage = { type: 'height'; height: number } | { type: 'redirect'; url: string };
+export type FormMessage =
+  | { type: 'height'; payload: { height: number } }
+  | { type: 'redirect'; payload: { url: string } };
 
 export interface EmbedOptions {
   answers?: Answers;
@@ -49,11 +51,11 @@ export function embed(
   function onFormMessage(event: MessageEvent<FormMessage>) {
     const message = event.data;
     if (message?.type === 'height' && height === 'auto') {
-      iframe.style.height = `${message.height}px`;
-    } else if (message?.type === 'redirect' && typeof message.url === 'string') {
+      iframe.style.height = `${message.payload?.height}px`;
+    } else if (message?.type === 'redirect' && typeof message.payload?.url === 'string') {
       let destination: URL;
       try {
-        destination = new URL(message.url, url);
+        destination = new URL(message.payload.url, url);
       } catch {
         return;
       }
@@ -84,7 +86,8 @@ export function embed(
     port.addEventListener('message', onFormMessage);
     port.start();
 
-    const init: InitMessage = answers === undefined ? { type: 'init' } : { type: 'init', answers };
+    const init: InitMessage =
+      answers === undefined ? { type: 'init' } : { type: 'init', payload: { answers } };
     formWindow.postMessage(init, url.origin, [channel.port2]);
   }
 
