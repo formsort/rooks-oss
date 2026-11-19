@@ -6,7 +6,7 @@ Public packages for [Rooks](https://rooks.ai) forms.
 | ------------------------------------------- | ------------------------------ |
 | [`@rooks-ai/web-embed`](packages/web-embed) | Embed Rooks forms in web pages |
 
-[Web embed on npm](https://www.npmjs.com/package/@rooks-ai/web-embed) <!-- web-embed-version -->
+[Web embed 0.1.0 on npm](https://www.npmjs.com/package/@rooks-ai/web-embed/v/0.1.0) <!-- web-embed-version -->
 
 ## Development
 
