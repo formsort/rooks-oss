@@ -1,4 +1,8 @@
 # Changelog
+## 0.1.0
+
+- Add the Rooks web embed SDK by @alikirec and @claude in [#7](https://github.com/formsort/rooks-oss/pull/7)
+
 ## 0.1.0-alpha.0
 
 ### Internal Changes 🔧
