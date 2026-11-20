@@ -94,6 +94,10 @@ The SDK keeps initial answers out of the iframe URL and sends them directly to t
 after it signals that it is ready. The handshake repeats on reload. A different page loaded into
 the iframe on the same origin can also receive those answers if it signals that it is ready.
 
+The page at the form URL gets the answers and can navigate your page with a redirect. Use only
+the URL of your own published form. Never take the form URL from user input, a query parameter,
+or HTML that you do not control. This applies to `embed()` and to the `src` of `<rooks-embed>`.
+
 ### Events
 
 `form.on(name, listener)` adds a listener for a form event. `form` is the handle that `embed()`
@@ -134,7 +138,7 @@ Answers are often personal or health data. Do not log them or send them to analy
 
 | Attribute | Behavior                                                                                              |
 | --------- | ----------------------------------------------------------------------------------------------------- |
-| `src`     | The absolute HTTP(S) form URL. Without `src`, the element shows nothing.                              |
+| `src`     | The absolute HTTP(S) URL of your published form. Without `src`, the element shows nothing.            |
 | `height`  | `auto` (the default) follows the height reported by the form. A number sets a fixed height in pixels. |
 
 `answers` is a JavaScript property, not an attribute. It takes the same object as the `answers`

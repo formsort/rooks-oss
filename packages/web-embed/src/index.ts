@@ -258,9 +258,15 @@ function defineElement(): void {
   if (typeof customElements === 'undefined' || customElements.get('rooks-embed')) {
     return;
   }
-  // A constructed sheet works under Trusted Types and a strict style-src CSP.
-  const sheet = new CSSStyleSheet();
-  sheet.replaceSync(':host { display: block }');
+  const css = ':host { display: block }';
+  // A constructed sheet works under Trusted Types and a strict style-src CSP. Safari before 16.4 has none.
+  let sheet: CSSStyleSheet | undefined;
+  try {
+    sheet = new CSSStyleSheet();
+    sheet.replaceSync(css);
+  } catch {
+    sheet = undefined;
+  }
   customElements.define(
     'rooks-embed',
     class extends HTMLElement {
@@ -273,7 +279,13 @@ function defineElement(): void {
 
       constructor() {
         super();
-        this.#root.adoptedStyleSheets = [sheet];
+        if (sheet) {
+          this.#root.adoptedStyleSheets = [sheet];
+        } else {
+          const style = document.createElement('style');
+          style.textContent = css;
+          this.#root.append(style);
+        }
         // Moves answers set before the element upgraded onto the setter.
         if (Object.hasOwn(this, 'answers')) {
           const answers = (this as { answers?: Answers }).answers;
