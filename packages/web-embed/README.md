@@ -10,7 +10,7 @@ form's allowed domains. Use the final published form URL, including its custom d
 ### With a package manager
 
 ```sh
-pnpm add @rooks-ai/web-embed@0.2.0
+pnpm add @rooks-ai/web-embed@0.3.0
 ```
 
 Add a container where the form should appear.
@@ -38,8 +38,8 @@ The script tag pins the package version and uses subresource integrity to verify
 ```html
 <div id="intake"></div>
 <script
-  src="https://cdn.jsdelivr.net/npm/@rooks-ai/web-embed@0.2.0/dist/index.umd.js"
-  integrity="sha384-+kGVcM5/s6wFx6kwOoBXu0+gVljapJVuA1zhKFS0XfKXluvGmq7fiyjCnvgSPdt5"
+  src="https://cdn.jsdelivr.net/npm/@rooks-ai/web-embed@0.3.0/dist/index.umd.js"
+  integrity="sha384-A5e5ZSK4fnbNeLR2RXG61c0qQ0yeEiDNNj06U2IfSR8+8ta2OfaCaCjzY0Iv+8bi"
   crossorigin="anonymous"
 ></script>
 <script>
