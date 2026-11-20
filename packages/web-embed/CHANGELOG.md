@@ -1,4 +1,10 @@
 # Changelog
+## 0.2.0
+
+### Breaking Changes 🛠
+
+- (web-embed) Send message data under payload by @alikirec and @claude in [#8](https://github.com/formsort/rooks-oss/pull/8)
+
 ## 0.1.0
 
 - Add the Rooks web embed SDK by @alikirec and @claude in [#7](https://github.com/formsort/rooks-oss/pull/7)
