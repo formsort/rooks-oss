@@ -1,4 +1,10 @@
 # Changelog
+## 0.3.0
+
+### New Features ✨
+
+- (web-embed) Add typed event listeners and the <rooks-embed> element by @alikirec and @claude in [#9](https://github.com/formsort/rooks-oss/pull/9)
+
 ## 0.2.0
 
 ### Breaking Changes 🛠
